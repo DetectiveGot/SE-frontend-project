@@ -206,3 +206,66 @@ export async function POST(req: NextRequest, {params}:{params: Promise<{id: stri
         });
     }
 }
+
+//test
+export async function DELETE(req: NextRequest,{ params }: { params: Promise<{ id: string }> }) {
+  try {
+    const session = await getServerSession(authOptions)
+
+    if (!session?.user) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Not authorized",
+        },
+        { status: 401 }
+      )
+    }
+
+    const user = session.user as UserType
+
+    if (user.role !== "admin" && user.role !== 'owner') {
+      return NextResponse.json(
+        {
+          success: false,
+          message: `User ${user.id} is not authorized to delete these reservations`,
+        },
+        { status: 401 }
+      )
+    }
+
+    await connectDB()
+
+    const { id } = await params
+
+    const result = await Reservation.deleteMany({ restaurant: id })
+
+    if (result.deletedCount === 0) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: `No reservations found for restaurant ${id}`,
+        },
+        { status: 404 }
+      )
+    }
+
+    return NextResponse.json(
+      {
+        success: true,
+        deletedCount: result.deletedCount,
+      },
+      { status: 200 }
+    )
+  } catch (err) {
+    console.log(err)
+
+    return NextResponse.json(
+      {
+        success: false,
+        message: "Cannot delete reservations",
+      },
+      { status: 500 }
+    )
+  }
+}

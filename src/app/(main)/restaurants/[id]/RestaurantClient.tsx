@@ -17,20 +17,26 @@ export default function RestaurantClient({restaurants,rating}:{restaurants:Resta
     const router = useRouter();
     const handleDelete = async () => {
       try {
-            const resp = await fetch(`/api/restaurants/${restaurants._id.toString()}`, {
-                method: 'DELETE',
-            });
+            const [restaurantResp, reservationsResp] = await Promise.all([
+              fetch(`/api/restaurants/${restaurants._id.toString()}`, {
+                method: "DELETE",
+              }),
+              fetch(`/api/restaurants/${restaurants._id.toString()}/reservations`, {
+                method: "DELETE",
+              }),
+            ])
             
-            const data = await resp.json();
-            if(!resp.ok) {
-                throw new Error(data.message || "Failed to create");
+            const restaurantData  = await restaurantResp.json().catch(() => null);
+            const reservationsData = await reservationsResp.json().catch(() => null)
+            if(!restaurantResp.ok || !reservationsResp.ok) {
+                throw new Error(restaurantData.message || reservationsData.message || "Failed to delete");
             }
-            toast.success("Create success!", {position: 'top-center'})
+            toast.success("Delete success!", {position: 'top-center'})
             // closeCard();
             router.push('/restaurants');
         } catch(err) {
             console.log(err);
-            toast.error("Failed to create", {
+            toast.error("Cascade delete failed", {
                 position: 'top-center',
                 description: err instanceof Error ? err.message : "Something went wrong.",
             });
@@ -102,7 +108,7 @@ export default function RestaurantClient({restaurants,rating}:{restaurants:Resta
 
                 <div className="flex items-end flex-col w-full p-4 gap-y-3">
                     {(() => {
-                      if(role!=='owner') {
+                      if(role==='owner' || role==='admin') {
                         return (
                           <>
                             <button className="w-40 h-12 text-white bg-black text-[30px] rounded-xl [text-shadow:0_0_20px_white,0_0_60px_rgba(255,255,255,1),0_0_100px_rgba(255,255,255,0.8)] font-bold
