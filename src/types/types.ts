@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import NextAuth, { DefaultSession } from "next-auth";
 
 export type UserType = {
     id: string,
@@ -10,7 +11,7 @@ export type UserType = {
 }
 
 export type ReservationType = {
-    _id: string,
+    _id: mongoose.Types.ObjectId
     startDateTime: Date
     endDateTime: Date
     user: string
@@ -18,11 +19,25 @@ export type ReservationType = {
 }
 
 export type RestaurantType = {
-    _id: string
+    _id: mongoose.Types.ObjectId
     imgsrc: string,
     name: string,
     address: string,
     tel:string,
     openTime: string,
     closeTime: string,
+}
+
+declare module "next-auth" {
+  interface Session {
+    user: {
+      role: string
+    } & DefaultSession["user"]
+  }
+}
+
+declare module "next-auth/jwt" {
+  interface JWT {
+    role: string
+  }
 }
