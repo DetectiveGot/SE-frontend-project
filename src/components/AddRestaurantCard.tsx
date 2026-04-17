@@ -63,8 +63,8 @@ const AddRestaurantCard = ({closeCard}:{closeCard: () => void}) => {
                             <span>to</span>
                             <input type="time" id='closeTime' name='closeTime'/>
                         </span>
-                        <label htmlFor="imgsrc" className="block">Add Photo</label>
-                        <input id='imgsrc' type='url' name='imgsrc'/>
+                        <label htmlFor="imgsrc" className="block mt-3">Add Photo</label>
+                        <input id='imgsrc' type='url' name='imgsrc' placeholder="Input Image URL"/>
                     </div>
                     <div>
                         <Button variant={'outline'} className="w-full bg-black text-white" type='submit'>Submit</Button>
