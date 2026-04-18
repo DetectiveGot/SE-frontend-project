@@ -48,7 +48,7 @@ export default function RestaurantsPage() {
   useEffect(() => {
     if (redirect) {
       const timer = setTimeout(() => {
-        router.push("/api/auth/signin");
+        router.push("/login");
       }, 1200);
 
       return () => clearTimeout(timer);
@@ -76,7 +76,7 @@ export default function RestaurantsPage() {
     setLoading(true);
 
     try {
-      const res = await fetch("/api/auth/signup", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -104,6 +104,7 @@ export default function RestaurantsPage() {
 
     } catch (err) {
       toast.error("Network error");
+      console.log(err);
     } finally {
       setLoading(false);
     }
