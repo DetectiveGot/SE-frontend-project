@@ -113,6 +113,7 @@ export async function POST(req: NextRequest) {
             );
         }
         const body = await req.json();
+        // console.log(body);
         const resp = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/restaurants`, {
             method: 'POST',
             headers: {
@@ -122,6 +123,8 @@ export async function POST(req: NextRequest) {
             body: JSON.stringify(body),
         });
         const data = await resp.json().catch(() => null);
+
+        // console.log(data);
 
         return NextResponse.json(data, {
             status: resp.status

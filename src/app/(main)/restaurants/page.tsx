@@ -22,6 +22,8 @@ export default async function RestaurantsPage() {
     }
     const restaurantsData = await restaurantsRes.json();
     const restaurants = restaurantsData.data;
+    
+    // console.log(restaurants);
 
       await connectDB();
     

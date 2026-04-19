@@ -12,6 +12,8 @@ export default function Card({
 
   const avgStar = ratingMap[restaurant._id.toString()] || 0;
 
+  // console.log("This is restaurant card", restaurant);
+
   return (
     <InteractiveCard>
       <Box className="relative w-full h-full">

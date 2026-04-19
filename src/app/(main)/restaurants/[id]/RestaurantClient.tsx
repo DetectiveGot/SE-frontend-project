@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from "react";
-import type { RestaurantType, UserType } from "@/types/types"
 import { AddReserveCard } from "@/components/AddReserveCard";
 import { Rating } from "@mui/material";
 import { usePathname } from "next/navigation";
@@ -9,15 +8,16 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { RestaurantAlertRemove } from "@/components/RestaurantAlertRemove";
 import Link from "next/link";
-import { getUser } from "@/lib/getUser";
 
 export default function RestaurantClient({restaurants,rating,role,user}:{restaurants:any , rating:number , role:String , user:any}) {
     const [showCard, setShowCard] = useState(false);
     const pathname = usePathname();
     const router = useRouter();
 
-    console.log("owner",restaurants.user)
-    console.log("user",user)
+    // console.log("owner",restaurants.user)
+    // console.log("user",user)
+
+    console.log(restaurants);
 
     const handleDelete = async () => {
       try {
@@ -107,7 +107,7 @@ export default function RestaurantClient({restaurants,rating,role,user}:{restaur
                 
                 <div className="flex mt-10 justify-start items-center flex-1 gap-15 [text-shadow:0_4px_20px_rgba(0,0,0,1)]">
                     <h1 className=" ml-30 pr-15 text-[60px] border-r border-black">{restaurants.name}</h1>
-                    <h1 className=" text-[30px]">{restaurants.address} Tel: {restaurants.tel} </h1>
+                    <h1 className=" text-[30px]">{restaurants.address} Tel: {restaurants.telephone} </h1>
                 </div>
 
                 <div className="justify-end flex items-end flex-row w-full p-4 gap-x-3">
