@@ -35,7 +35,7 @@ export default function RestaurantClient({restaurants,rating,role,user,token}:{r
             
             const restaurantData  = await restaurantResp.json().catch(() => null);
             toast.success("Delete success!", {position: 'top-center'})
-            router.push('/yourRestaurants');
+            router.push('/');
         } catch(err) {
             console.log(err);
             toast.error("Cascade delete failed", {
