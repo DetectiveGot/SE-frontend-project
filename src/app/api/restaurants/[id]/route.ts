@@ -33,7 +33,6 @@ export async function PUT(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  console.log("Route hit!");
   try {
     const {id} = await params;
     const token = (await cookies()).get('token')?.value;
