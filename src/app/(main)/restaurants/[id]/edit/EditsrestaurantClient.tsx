@@ -1,26 +1,18 @@
 'use client'
 
 import { useState } from "react";
-import type { RestaurantType } from "@/types/types"
-import { AddReserveCard } from "@/components/AddReserveCard";
+import type { RestaurantType, UserType } from "@/types/types"
 import { Box, TextField } from "@mui/material";
-import { useSession } from "next-auth/react";
-import { usePathname } from "next/navigation";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
-export default function EditsrestaurantClient({restaurants}:{restaurants:RestaurantType}) {
-    const [showCard, setShowCard] = useState(false);
-    const session = useSession();
-    const pathname = usePathname();
-    console.log(session);
-    const role = session.data?.user?.role;
+export default function EditsrestaurantClient({user, restaurants}:{user:UserType, restaurants:RestaurantType}) {
     const router = useRouter();
 
     const [name, setName] = useState(restaurants.name);
     const [address, setAddress] = useState(restaurants.address);
-    const [tel, setTel] = useState(restaurants.tel);
+    const [tel, setTel] = useState(restaurants.telephone);
     const [openTime, setOpenTime] = useState(restaurants.openTime);
     const [closeTime, setCloseTime] = useState(restaurants.closeTime);
     const [imgsrc, setImageURL] = useState(restaurants.imgsrc);
@@ -38,7 +30,7 @@ export default function EditsrestaurantClient({restaurants}:{restaurants:Restaur
       imgsrc,
     };
 
-    const resp = await fetch(`${process.env.BACKEND_URL}/api/restaurants/${id}`, {
+    const resp = await fetch(`/api/restaurants/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -166,9 +158,6 @@ export default function EditsrestaurantClient({restaurants}:{restaurants:Restaur
               </div>
 
             </div>
-            {showCard && (
-              <AddReserveCard restaurant={restaurants} closeCard={() => setShowCard(false)}/>
-            )}
         </main>
     )
 }
