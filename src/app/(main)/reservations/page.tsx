@@ -15,7 +15,6 @@ export default async function ReservationPage() {
         }
     });
     if(!reservationsRes.ok) {
-      console.log("www")
         notFound();
     }
     const reservationsData = await reservationsRes.json();

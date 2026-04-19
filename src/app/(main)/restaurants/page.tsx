@@ -22,8 +22,6 @@ export default async function RestaurantsPage() {
     }
     const restaurantsData = await restaurantsRes.json();
     const restaurants = restaurantsData.data;
-    // console.log(reservationsRes);
-    // console.log(reservations);
 
       await connectDB();
     
@@ -39,9 +37,6 @@ export default async function RestaurantsPage() {
       const ratingMap = Object.fromEntries(
         ratings.map(r => [r._id.toString(), r.avgStar])
       );
-
-      console.log("Res",restaurantsData);
-
     return (
         <>
         <Light/>
