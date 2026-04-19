@@ -4,6 +4,7 @@ import Light from "@/components/ui/Light"
 import RestaurantClient from "./RestaurantClient";
 import Comment from "@/models/comment";
 import { connectDB } from "@/lib/db";
+import { getUser } from "@/lib/getUser";
 
 export default async function RestaurantsPage({params}: {params: Promise<{id: string}>}) {
     const { id } = await params;
@@ -14,18 +15,14 @@ export default async function RestaurantsPage({params}: {params: Promise<{id: st
             cookie: h.get("cookie") ?? "",
         }
     });
+    const user = await getUser();
 
     
     if(!restaurantsRes.ok) {
-        // console.log("restaurantsRes :",restaurantsRes)
-        // console.log("Incoming ID:", id);
-        // console.log("Type:", typeof id);
         notFound();
     }
     const restaurantsData = await restaurantsRes.json();
     const restaurants = restaurantsData.data;
-    // console.log(reservationsRes);
-    // console.log(reservations);
 
     await connectDB();
 
@@ -49,7 +46,7 @@ export default async function RestaurantsPage({params}: {params: Promise<{id: st
     return (
         <>
             <Light/>
-            <RestaurantClient restaurants={restaurants} rating={avgStar}/>
+            <RestaurantClient user={user} restaurants={restaurants} rating={avgStar}/>
         </>
     )
 }

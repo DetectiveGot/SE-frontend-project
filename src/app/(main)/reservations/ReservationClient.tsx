@@ -9,7 +9,7 @@ export default function ReservationClient({initReservation}:{initReservation:Res
     const [reservations, setReservations] = useState(initReservation);
 
     const removeReserve = (id:string) => {
-        setReservations((pv) => pv.filter((it) => it._id!==id))
+        setReservations((pv) => pv.filter((it) => it._id.toString()!==id))
     }
     return (
         <div className="max-w-7xl mx-auto py-8 w-full space-y-4 ">

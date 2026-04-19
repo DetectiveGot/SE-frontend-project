@@ -6,7 +6,6 @@ import { Box } from "@mui/material";
 import Card from "@/components/ui/Card";
 import Comment from "@/models/comment";
 import { connectDB } from "@/lib/db";
-import { AddRestaurantCard } from "@/components/AddRestaurantCard";
 import RestaurantHomeClient from "./RestaurantHomeClient";
 
 export default async function RestaurantsPage() {

@@ -1,22 +1,18 @@
 'use client'
 
 import { useState } from "react";
-import type { RestaurantType } from "@/types/types"
+import type { RestaurantType, UserType } from "@/types/types"
 import { AddReserveCard } from "@/components/AddReserveCard";
 import { Rating } from "@mui/material";
-import { useSession } from "next-auth/react";
 import { usePathname } from "next/navigation";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { RestaurantAlertRemove } from "@/components/RestaurantAlertRemove";
 import Link from "next/link";
 
-export default function RestaurantClient({restaurants,rating}:{restaurants:RestaurantType , rating:number}) {
+export default function RestaurantClient({user,restaurants,rating}:{user:UserType, restaurants:RestaurantType , rating:number}) {
     const [showCard, setShowCard] = useState(false);
-    const session = useSession();
     const pathname = usePathname();
-    console.log(session);
-    const role = session.data?.user?.role;
     const router = useRouter();
     const handleDelete = async () => {
       try {
@@ -111,7 +107,7 @@ export default function RestaurantClient({restaurants,rating}:{restaurants:Resta
 
                 <div className="flex items-end flex-col w-full p-4 gap-y-3">
                     {(() => {
-                      if(role==='owner' || role==='admin') {
+                      if(user.role==='owner' || user.role==='admin') {
                         return (
                           <>
                             <Link href={`${pathname}/edit`}
@@ -140,7 +136,7 @@ export default function RestaurantClient({restaurants,rating}:{restaurants:Resta
                 
             </div>
             {showCard && (
-              <AddReserveCard restaurant={restaurants} closeCard={() => setShowCard(false)}/>
+              <AddReserveCard user={user} restaurant={restaurants} closeCard={() => setShowCard(false)}/>
             )}
         </main>
     )
