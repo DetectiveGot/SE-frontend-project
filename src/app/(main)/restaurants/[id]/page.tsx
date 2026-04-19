@@ -58,7 +58,7 @@ export default async function RestaurantsPage({params}: {params: Promise<{id: st
     return (
         <>
             <Light/>
-            <RestaurantClient restaurants={restaurants} rating={avgStar} role={role} user={user}/>
+            <RestaurantClient token={token} restaurants={restaurants} rating={avgStar} role={role} user={user}/>
         </>
     )
 }

@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import { RestaurantAlertRemove } from "@/components/RestaurantAlertRemove";
 import Link from "next/link";
 
-export default function RestaurantClient({restaurants,rating,role,user}:{restaurants:any , rating:number , role:String , user:any}) {
+export default function RestaurantClient({restaurants,rating,role,user,token}:{restaurants:any , rating:number , role:String , user:any , token:any}) {
     const [showCard, setShowCard] = useState(false);
     const pathname = usePathname();
     const router = useRouter();
@@ -21,23 +21,21 @@ export default function RestaurantClient({restaurants,rating,role,user}:{restaur
 
     const handleDelete = async () => {
       try {
-            const [restaurantResp, reservationsResp] = await Promise.all([
-              fetch(`${process.env.BACKEND_URL}/api/v1/restaurants/${restaurants._id.toString()}`, {
+
+        console.log("restaurants._id",restaurants._id)
+        
+            const [restaurantResp] = await Promise.all([
+              fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/restaurants/${restaurants._id}`, {
                 method: "DELETE",
-              }),
-              fetch(`${process.env.BACKEND_URL}/api/v1/restaurants/${restaurants._id.toString()}/reservations`, {
-                method: "DELETE",
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                }
               }),
             ])
             
             const restaurantData  = await restaurantResp.json().catch(() => null);
-            const reservationsData = await reservationsResp.json().catch(() => null)
-            if(!restaurantResp.ok || !reservationsResp.ok) {
-                throw new Error(restaurantData.message || reservationsData.message || "Failed to delete");
-            }
             toast.success("Delete success!", {position: 'top-center'})
-            // closeCard();
-            router.push('/restaurants');
+            router.push('/yourRestaurants');
         } catch(err) {
             console.log(err);
             toast.error("Cascade delete failed", {
