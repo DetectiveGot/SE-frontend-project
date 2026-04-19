@@ -20,7 +20,7 @@ export default async function RestaurantsPage({params}: {params: Promise<{id: st
     });
 
     const data = await res.json();
-    const role = user.role || null;
+    const role = user?.role || null;
 
     const h = await headers();
     const restaurantsRes = await fetch(`${process.env.BACKEND_URL}/api/v1/restaurants/${id}`, {
