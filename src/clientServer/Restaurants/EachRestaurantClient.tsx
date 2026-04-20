@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from "react";
+import type { RestaurantType, UserType } from "@/types/types"
 import { AddReserveCard } from "@/components/AddReserveCard";
 import { Rating } from "@mui/material";
 import { usePathname } from "next/navigation";
@@ -9,15 +10,13 @@ import { useRouter } from "next/navigation";
 import { RestaurantAlertRemove } from "@/components/RestaurantAlertRemove";
 import Link from "next/link";
 
-export default function RestaurantClient({restaurants,rating,role,user,token}:{restaurants:any , rating:number , role:String , user:any , token:any}) {
+export default function EachRestaurantClient({restaurants,rating,role,user,token}:{restaurants:any , rating:number , role:String , user:any , token:any}) {
     const [showCard, setShowCard] = useState(false);
     const pathname = usePathname();
     const router = useRouter();
 
-    // console.log("owner",restaurants.user)
-    // console.log("user",user)
-
-    console.log(restaurants);
+    console.log("owner",restaurants.user)
+    console.log("user",user)
 
     const handleDelete = async () => {
       try {
@@ -35,7 +34,7 @@ export default function RestaurantClient({restaurants,rating,role,user,token}:{r
             
             const restaurantData  = await restaurantResp.json().catch(() => null);
             toast.success("Delete success!", {position: 'top-center'})
-            router.push('/');
+            router.push('/yourRestaurants');
         } catch(err) {
             console.log(err);
             toast.error("Cascade delete failed", {
@@ -46,66 +45,49 @@ export default function RestaurantClient({restaurants,rating,role,user,token}:{r
     }
     return (
         <main className="flex flex-col justify-center items-center w-full flex-1 mt-5">
+          <div className="fixed inset-0 -z-10">
+            </div>
 
-            <div className="fixed inset-0 -z-10">
-          <img
-            src="/images/BG2.png"
-            className="absolute inset-0 w-full h-full object-cover z-0"
-          />
+              <div className="relative flex flex-col w-375 rounded-3xl bg-white shadow-[0_0px_40px_rgba(0,0,0,0.7)]">
 
-          <img
-            src="/images/BG.png"
-            className="absolute inset-0 w-full h-full object-cover z-10"
-          />
-          
-          <div
-            className="absolute inset-0 w-full h-full z-20 bottom-0"
-            style={{  
-              background: `linear-gradient(to top, #cebba89a, #ffffff00)`
-            }}
-          />
-        </div>
+                <svg width="0" height="0">
+                  <defs>
+                    <linearGradient id="starGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="10%" stopColor="#ffffff" />
+                      <stop offset="100%" stopColor="#ffaa00" />
+                    </linearGradient>
+                  </defs>
+                </svg>
 
-            <div className="relative flex flex-col w-375 rounded-3xl bg-white shadow-[0_0px_40px_rgba(0,0,0,0.7)]">
+                <Rating
+                  value={rating}
+                  readOnly
+                  sx={{
+                    position: "absolute",
+                    top: -70,
+                    left: 16,
+                    zIndex: 2,
+                    fontSize: "3rem",
 
-              <svg width="0" height="0">
-                <defs>
-                  <linearGradient id="starGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="10%" stopColor="#ffffff" />
-                    <stop offset="100%" stopColor="#ffaa00" />
-                  </linearGradient>
-                </defs>
-              </svg>
+                    "& .MuiRating-iconFilled svg": {
+                      fill: "url(#starGradient)",
+                      stroke: "black",
+                      strokeWidth: 1,
+                    },
 
-              <Rating
-                value={rating}
-                readOnly
-                sx={{
-                  position: "absolute",
-                  top: -70,
-                  left: 16,
-                  zIndex: 2,
-                  fontSize: "3rem",
-
-                  "& .MuiRating-iconFilled svg": {
-                    fill: "url(#starGradient)",
-                    stroke: "black",
-                    strokeWidth: 1,
-                  },
-
-                  "& .MuiRating-iconEmpty svg": {
-                    fill: "#333" ,
-                    stroke: "#333",
-                    strokeWidth: 1,
-                  },
-                }}
-              />
+                    "& .MuiRating-iconEmpty svg": {
+                      fill: "#333" ,
+                      stroke: "#333",
+                      strokeWidth: 1,
+                    },
+                  }}
+                />
 
                 <img src={restaurants.imgsrc} className=" rounded-3xl w-full h-96 object-cover border-2 border-white shadow-[0_20px_20px_rgba(0,0,0,0.6)]" />
                 
                 <div className="flex mt-10 justify-start items-center flex-1 gap-15 [text-shadow:0_4px_20px_rgba(0,0,0,1)]">
                     <h1 className=" ml-30 pr-15 text-[60px] border-r border-black">{restaurants.name}</h1>
-                    <h1 className=" text-[30px]">{restaurants.address} Tel: {restaurants.telephone} </h1>
+                    <h1 className=" text-[30px]">{restaurants.address} Tel: {restaurants.tel} </h1>
                 </div>
 
                 <div className="justify-end flex items-end flex-row w-full p-4 gap-x-3">
@@ -131,9 +113,9 @@ export default function RestaurantClient({restaurants,rating,role,user,token}:{r
                 </div>
                 
             </div>
-            {showCard && (
-              <AddReserveCard user={user} restaurant={restaurants} closeCard={() => setShowCard(false)}/>
-            )}
+          {showCard && (
+            <AddReserveCard user={user} restaurant={restaurants} closeCard={() => setShowCard(false)}/>
+          )}
         </main>
     )
 }

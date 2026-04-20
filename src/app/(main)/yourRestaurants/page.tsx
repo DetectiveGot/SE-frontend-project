@@ -6,8 +6,7 @@ import { Box } from "@mui/material";
 import Card from "@/components/ui/Card";
 import Comment from "@/models/comment";
 import { connectDB } from "@/lib/db";
-import { AddRestaurantCard } from "@/components/AddRestaurantCard";
-import RestaurantHomeClient from "./RestaurantHomeClient";
+import RestaurantHomeClient from "../../../clientServer/YourRestaurants/YourRestaurantsClient";
 import { getUser } from "@/lib/getUser";
 
 export default async function RestaurantsPage() {
@@ -30,9 +29,6 @@ export default async function RestaurantsPage() {
     const filteredRestaurants = restaurants.filter(
         (r: any) => r.owner?._id === user._id.toString()
     );
-
-    // console.log(reservationsRes);
-    // console.log(reservations);
 
       await connectDB();
     

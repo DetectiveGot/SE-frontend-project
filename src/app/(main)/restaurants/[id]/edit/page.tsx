@@ -1,9 +1,7 @@
 import { notFound } from "next/navigation";
 import { headers } from "next/headers";
 import Light from "@/components/ui/Light"
-import EditsrestaurantClient from "@/app/(main)/restaurants/[id]/edit/EditsrestaurantClient";
-import Comment from "@/models/comment";
-import { connectDB } from "@/lib/db";
+import EditsrestaurantClient from "@/clientServer/Restaurants/EditsrestaurantClient";
 import { getUser } from "@/lib/getUser";
 
 export default async function RestaurantsPage({params}: {params: Promise<{id: string}>}) {
@@ -25,6 +23,7 @@ export default async function RestaurantsPage({params}: {params: Promise<{id: st
     }
     const restaurantsData = await restaurantsRes.json();
     const restaurants = restaurantsData.data;
+
     return (
         <>
             <Light/>

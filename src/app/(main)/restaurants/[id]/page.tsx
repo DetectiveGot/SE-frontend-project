@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { cookies, headers } from "next/headers";
 import Light from "@/components/ui/Light"
-import RestaurantClient from "./RestaurantClient";
+import EachRestaurantClient from "../../../../clientServer/Restaurants/EachRestaurantClient";
 import Comment from "@/models/comment";
 import { connectDB } from "@/lib/db";
 import { getUser } from "@/lib/getUser";
@@ -58,7 +58,8 @@ export default async function RestaurantsPage({params}: {params: Promise<{id: st
     return (
         <>
             <Light/>
-            <RestaurantClient token={token} restaurants={restaurants} rating={avgStar} role={role} user={user}/>
+            <EachRestaurantClient token={token} restaurants={restaurants} rating={avgStar} role={role} user={user}/>
+
         </>
     )
 }

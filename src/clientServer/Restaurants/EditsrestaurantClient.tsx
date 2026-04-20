@@ -1,13 +1,21 @@
 'use client'
 
 import { useState } from "react";
-import type { RestaurantType, UserType } from "@/types/types"
+import type { RestaurantType } from "@/types/types"
+import { AddReserveCard } from "@/components/AddReserveCard";
 import { Box, TextField } from "@mui/material";
+import { useSession } from "next-auth/react";
+import { usePathname } from "next/navigation";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
-export default function EditsrestaurantClient({user, restaurants}:{user:UserType, restaurants:RestaurantType}) {
+export default function EditsrestaurantClient({user,restaurants}:{user:any,restaurants:RestaurantType}) {
+    const [showCard, setShowCard] = useState(false);
+    const session = useSession();
+    const pathname = usePathname();
+    console.log(session);
+    const role = session.data?.user?.role;
     const router = useRouter();
 
     const [name, setName] = useState(restaurants.name);
@@ -30,7 +38,7 @@ export default function EditsrestaurantClient({user, restaurants}:{user:UserType
       imgsrc,
     };
 
-    const resp = await fetch(`/api/restaurants/${id}`, {
+    const resp = await fetch(`${process.env.BACKEND_URL}/api/restaurants/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -58,22 +66,7 @@ export default function EditsrestaurantClient({user, restaurants}:{user:UserType
         <main className="flex flex-col justify-center items-center w-full flex-1 mt-5">
 
           <div className="fixed inset-0 -z-10">
-            <img
-              src="/images/BG2.png"
-              className="absolute inset-0 w-full h-full object-cover z-0"
-            />
 
-            <img
-              src="/images/BG.png"
-              className="absolute inset-0 w-full h-full object-cover z-10"
-            />
-            
-            <div
-              className="absolute inset-0 w-full h-full z-20 bottom-0"
-              style={{  
-                background: `linear-gradient(to top, #cebba89a, #ffffff00)`
-              }}
-            />
         </div>
 
             <div className="relative p-7 flex flex-col text-[2rem] h-150 w-375 rounded-3xl bg-white shadow-[0_0px_40px_rgba(0,0,0,0.7)]">
@@ -158,6 +151,9 @@ export default function EditsrestaurantClient({user, restaurants}:{user:UserType
               </div>
 
             </div>
+            {showCard && (
+              <AddReserveCard user={user} restaurant={restaurants} closeCard={() => setShowCard(false)}/>
+            )}
         </main>
     )
 }

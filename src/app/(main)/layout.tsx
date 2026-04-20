@@ -8,6 +8,7 @@ import { Toaster } from "sonner";
 import TopMenu from "@/components/TopMenu";
 
 import { Grandiflora_One } from 'next/font/google';
+import MainBackground from "@/components/Background";
 
 const grandiflora = Grandiflora_One({
   subsets: ['latin'],
@@ -36,17 +37,17 @@ export default async function RootLayout({
 }>) {
   const session = await getServerSession(authOptions);
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased [&::-webkit-scrollbar]:hidden`}
-    >
+    <html lang="en" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased [&::-webkit-scrollbar]:hidden`}>
       <body className={grandiflora.className}>
 
         <TopMenu />
+        <MainBackground/>
+
         <NextAuthProvider session={session}>
           {children}
         </NextAuthProvider>
         <Toaster/>
+
       </body>
     </html>
   );

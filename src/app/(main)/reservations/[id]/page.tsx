@@ -1,7 +1,7 @@
 import Container from "@/components/ui/container"
 import { notFound } from "next/navigation";
 import { headers } from "next/headers";
-import EditReserve from "./EditReserve";
+import EditReserve from "../../../../clientServer/Reservation/EditReservationsClient";
 import Light from "@/components/ui/Light"
 
 export default async function ReservationPage({params}: {params: Promise<{id: string}>}) {
@@ -27,22 +27,6 @@ export default async function ReservationPage({params}: {params: Promise<{id: st
             <Light/>
 
         <div className="fixed inset-0 -z-10">
-          <img
-            src="/images/BG2.png"
-            className="absolute inset-0 w-full h-full object-cover z-0"
-          />
-
-          <img
-            src="/images/BG.png"
-            className="absolute inset-0 w-full h-full object-cover z-10"
-          />
-          
-          <div
-            className="absolute inset-0 w-full h-full z-20 bottom-0"
-            style={{  
-              background: `linear-gradient(to top, #cebba89a, #ffffff00)`
-            }}
-          />
         </div>
 
             <div className="flex-1 py-8 max-w-350 mx-auto w-full">

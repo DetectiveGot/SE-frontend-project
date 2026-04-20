@@ -2,7 +2,6 @@
 import { AddRestaurantCard } from "@/components/AddRestaurantCard";
 import { CirclePlus } from "lucide-react";
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
 
 export default function RestaurantHomeClient() {
     const [showCard, setShowCard] = useState(false);
