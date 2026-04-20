@@ -3,7 +3,6 @@ import { notFound } from 'next/navigation';
 import MySwiper from './mySwiper';
 import Comment from "@/models/comment";
 import { connectDB } from "@/lib/db";
-import mongoose from "mongoose";
 
 export default async function CardPanel() {
 
@@ -19,7 +18,10 @@ export default async function CardPanel() {
   ]);
 
   const ratingMap = Object.fromEntries(
-    ratings.map(r => [r._id.toString(), r.avgStar])
+    ratings.map(r => [
+      r._id ? r._id.toString() : "unknown",
+      r.avgStar
+    ])
   );
 
     const h = await headers();

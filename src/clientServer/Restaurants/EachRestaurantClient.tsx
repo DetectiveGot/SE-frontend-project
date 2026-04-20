@@ -10,10 +10,11 @@ import { useRouter } from "next/navigation";
 import { RestaurantAlertRemove } from "@/components/RestaurantAlertRemove";
 import Link from "next/link";
 
-export default function EachRestaurantClient({restaurants,rating,role,user,token}:{restaurants:any , rating:number , role:String , user:any , token:any}) {
+export default function EachRestaurantClient({restaurants,rating,user,token}:{restaurants:any , rating:number , user:any , token:any}) {
     const [showCard, setShowCard] = useState(false);
     const pathname = usePathname();
     const router = useRouter();
+    const role = user?.role;
 
     console.log("owner",restaurants.user)
     console.log("user",user)

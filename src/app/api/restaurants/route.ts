@@ -6,22 +6,20 @@ export async function GET(req: NextRequest) {
     try {
         const user = await getUser();
         
-        if(!user) {
-            return NextResponse.json({
-                success: false, 
-                message: 'Not authorized',
-            }, {
-                status: 401
-            });
-        }
+        // ใครที่มางง คือขอให้ unAuthorized Users เข้าได้นะ
+        // if(!user) {
+        //     return NextResponse.json({
+        //         success: false, 
+        //         message: 'Not authorized',
+        //     }, {
+        //         status: 401
+        //     });
+        // }
         
-        console.log("GET Restaurant With User... ",user.userName);
-
+        if (user) console.log("GET Restaurant With User... ",user.userName);
+        
         const res = await fetch(`${process.env.BACKEND_URL}/api/v1/restaurants`,{
             method: "GET",
-            headers: {
-                Authorization: `Bearer ${user.token}`,
-            },
             cache: "no-store",
         });
 

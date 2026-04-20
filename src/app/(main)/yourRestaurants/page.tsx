@@ -42,7 +42,10 @@ export default async function RestaurantsPage() {
       ]);
     
       const ratingMap = Object.fromEntries(
-        ratings.map(r => [r._id.toString(), r.avgStar])
+        ratings.map(r => [
+            r._id ? r._id.toString() : "unknown",
+            r.avgStar
+        ])
       );
 
       console.log("Res",restaurantsData);

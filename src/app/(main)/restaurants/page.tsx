@@ -11,54 +11,31 @@ import { InnerBackground, OuterBackground } from "@/components/Background";
 
 export default async function RestaurantsPage() {
 
-    const h = await headers();
-    const restaurantsRes = await fetch(`${process.env.NEXTAUTH_URL}/api/restaurants`, {
-        cache: 'no-store',
-        headers: {
-            cookie: h.get("cookie") ?? "",
-        }
-    });
-    if(!restaurantsRes.ok) {
-        notFound();
+    try {
+        const { restaurants, ratingMap } = await FetchData(`${process.env.NEXTAUTH_URL}/api/restaurants`);
+            return (
+                <>
+                    <Light/>
+
+                    <div className="relative flex justify-center mt-20">
+
+                        <OuterBackground/>
+                        <div className="fixed inset-x-0 top-[150px] bottom-0 flex justify-center">
+
+                            <GridDisplay restaurants={restaurants} ratingMap={ratingMap}/>
+                            <InnerBackground/>
+
+                        </div>
+
+                    </div>
+
+                    <RestaurantHomeClient/>
+                </>
+            )
+    } catch (err) {
+        console.error(err);
+        notFound(); 
     }
-    
-    const restaurantsData = await restaurantsRes.json();
-    const restaurants = restaurantsData.data.data;
-
-      await connectDB();
-    
-      const ratings = await Comment.aggregate([
-        {
-          $group: {
-            _id: "$r_id",
-            avgStar: { $avg: "$star" },
-          },
-        },
-      ]);
-    
-      const ratingMap = Object.fromEntries(
-        ratings.map(r => [r._id.toString(), r.avgStar])
-      );
-
-    return (
-        <>
-            <Light/>
-
-            <div className="relative flex justify-center mt-20">
-
-                <OuterBackground/>
-                <div className="fixed inset-x-0 top-[150px] bottom-0 flex justify-center">
-                    
-                    <GridDisplay restaurants={restaurants} ratingMap={ratingMap}/>
-                    <InnerBackground/>
-
-                </div>
-
-            </div>
-
-            <RestaurantHomeClient/>
-        </>
-    )
 
 }
 
@@ -76,4 +53,60 @@ function GridDisplay({ restaurants, ratingMap }: any){
             </div>
         </div>
     )
+}
+
+async function FetchData(link:string){
+
+    console.log("",link)
+
+    const h = await headers();
+    const restaurantsRes = await fetch(link, {
+        cache: 'no-store',
+        headers: {
+            cookie: h.get("cookie") ?? "",
+        }
+    });
+
+    if (!restaurantsRes.ok) {
+        if (restaurantsRes.status === 401) {
+            throw new Error("Unauthorized");
+        }
+        if (restaurantsRes.status === 403) {
+            throw new Error("Forbidden");
+        }
+        if (restaurantsRes.status === 404) {
+            notFound();
+        }
+
+        const text = await restaurantsRes.text();
+        
+        console.error("STATUS:", restaurantsRes.status);
+        console.error("RESPONSE:", text);
+
+        throw new Error(`Fetch failed: ${restaurantsRes.status}`);
+    }
+    
+    const restaurantsData = await restaurantsRes.json();
+    const restaurants = restaurantsData.data.data;
+
+      await connectDB();
+    
+      const ratings = await Comment.aggregate([
+        {
+          $group: {
+            _id: "$r_id",
+            avgStar: { $avg: "$star" },
+          },
+        },
+      ]);
+    
+      const ratingMap = Object.fromEntries(
+        ratings.map(r => [
+            r._id ? r._id.toString() : "unknown",
+            r.avgStar
+        ])
+      );
+
+      return { restaurants, ratingMap };
+
 }

@@ -1,42 +1,41 @@
 import { notFound } from "next/navigation";
-import { cookies, headers } from "next/headers";
+
 import Light from "@/components/ui/Light"
 import EachRestaurantClient from "../../../../clientServer/Restaurants/EachRestaurantClient";
 import Comment from "@/models/comment";
 import { connectDB } from "@/lib/db";
 import { getUser } from "@/lib/getUser";
+import { cookies } from "next/headers";
 
 export default async function RestaurantsPage({params}: {params: Promise<{id: string}>}) {
+
     const { id } = await params;
-
-    const cookieStore = await cookies();
-    const token = cookieStore.get("token")?.value;
+    const token = (await cookies()).get("token")?.value;
     const user = await getUser();
+    const { restaurants , avgStar } = await FetchData(id,`${process.env.NEXTAUTH_URL}/api/restaurants/${id}`)
 
-    const res = await fetch(`${process.env.BACKEND_URL}/api/v1/auth/me`, {
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
-    });
+    return (
+        <>
+            <Light/>
+            <EachRestaurantClient token={token} restaurants={restaurants} rating={avgStar} user={user}/>
 
-    const data = await res.json();
-    const role = user?.role || null;
+        </>
+    )
+}
 
-    const h = await headers();
-    const restaurantsRes = await fetch(`${process.env.BACKEND_URL}/api/v1/restaurants/${id}`, {
+async function FetchData(id:string,link:string) {
+
+    await connectDB();
+    const restaurantsRes = await fetch(link, {
         cache: 'no-store',
-        headers: {
-          Authorization: `Bearer ${token}`,
-        }
     });
     
     if(!restaurantsRes.ok) {
         notFound();
     }
     const restaurantsData = await restaurantsRes.json();
-    const restaurants = restaurantsData.data;
-
-    await connectDB();
+    console.log("restaurantsData:", restaurantsData);
+    const restaurants = restaurantsData.data.data;
 
     const result = await Comment.aggregate([
     {
@@ -55,11 +54,6 @@ export default async function RestaurantsPage({params}: {params: Promise<{id: st
 
     const avgStar = result[0]?.avgStar || 0;
 
-    return (
-        <>
-            <Light/>
-            <EachRestaurantClient token={token} restaurants={restaurants} rating={avgStar} role={role} user={user}/>
+    return { restaurants , avgStar }
 
-        </>
-    )
 }
