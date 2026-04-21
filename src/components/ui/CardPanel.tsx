@@ -86,6 +86,7 @@ async function FetchData(link:string){
         rating: avg,
     };
     });
+    
 
       return { restaurants, result };
 
