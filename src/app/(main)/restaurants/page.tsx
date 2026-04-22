@@ -2,11 +2,9 @@ import { notFound } from "next/navigation";
 import { headers } from "next/headers";
 import Light from "@/components/ui/Light";
 import Link from "next/link";
-import { Box } from "@mui/material";
 import Card from "@/components/ui/Card";
 import Comment from "@/models/comment";
-import { connectDB } from "@/lib/db";
-import RestaurantHomeClient from "../../../clientServer/Restaurants/RestaurantHomeClient";
+import RestaurantHomeClient from "@/clientServer/Restaurants/RestaurantHomeClient";
 import { InnerBackground, OuterBackground } from "@/components/Background";
 
 export default async function RestaurantsPage() {

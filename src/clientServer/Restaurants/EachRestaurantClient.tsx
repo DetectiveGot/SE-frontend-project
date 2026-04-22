@@ -25,7 +25,7 @@ export default function EachRestaurantClient({restaurants,rating,user,token}:{re
         console.log("restaurants._id",restaurants._id)
         
             const [restaurantResp] = await Promise.all([
-              fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/restaurants/${restaurants._id}`, {
+              fetch(`/api/restaurants/${restaurants._id.toString()}`, {
                 method: "DELETE",
                 headers: {
                   Authorization: `Bearer ${token}`,
