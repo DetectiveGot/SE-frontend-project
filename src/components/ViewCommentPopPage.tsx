@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 
  const ViewCommentPopPage = ({restaurants,user,closeCard}:{restaurants:RestaurantType,user: UserType,closeCard: () => void} ) => {
     const router = useRouter();
+
     console.log("user is",user)
     const handleCreate = async (formData: FormData) => {
         
@@ -109,7 +110,7 @@ import { useRouter } from "next/navigation";
 
                                         {user._id === it.user._id ? ( 
 
-                                            <h1 className="text-blue-300">{it.user.name}</h1> 
+                                            <h1 className="text-[#00BBFF]">{it.user.name}</h1> 
 
                                             ) : (
 

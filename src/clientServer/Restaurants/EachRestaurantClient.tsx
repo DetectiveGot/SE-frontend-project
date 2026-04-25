@@ -49,6 +49,16 @@ export default function EachRestaurantClient({restaurants,rating,user,token}:{re
         }
     }
 
+    const checkFirst = () => {
+
+      if(user){
+        setShowComment(true);
+      }else{
+        toast("Login first");
+      }
+      
+    }
+
     return (
         <main className="flex flex-col justify-center items-center w-full flex-1 mt-5">
           <div className="fixed inset-0 -z-10">
@@ -99,7 +109,7 @@ export default function EachRestaurantClient({restaurants,rating,user,token}:{re
                 </div>
 
                 <div className="justify-end flex items-end flex-row w-full p-4 gap-x-3">
-                  {((role === 'owner' && restaurants.user === user._id)|| role === 'admin') ? (
+                  {((role === 'owner' && user && restaurants.user === user._id)|| role === 'admin') ? (
                     <>
                       <Link
                         href={`${pathname}/edit`}
@@ -114,7 +124,7 @@ export default function EachRestaurantClient({restaurants,rating,user,token}:{re
                     <>
                       <button
                         className="w-45 h-15 text-black bg-white text-[30px] rounded-lg border border-black [text-shadow:0_0_20px_white,0_0_60px_rgba(255,255,255,1),0_0_100px_rgba(255,255,255,0.8)] font-bold transition-all duration-300 ease-out hover:scale-105 hover:shadow-xl"
-                        onClick={() => setShowComment(true)}
+                        onClick={() => checkFirst()}
                       >
                         REVIEWS
                       </button>
@@ -133,7 +143,7 @@ export default function EachRestaurantClient({restaurants,rating,user,token}:{re
           {showCard && (
             <AddReserveCard user={user} restaurant={restaurants} closeCard={() => setShowCard(false)}/>
           )}
-          {showComment && <ViewCommentPopPage restaurants={restaurants} closeCard={() => setShowComment(false)} user={user}/>}
+          {showComment && user && <ViewCommentPopPage restaurants={restaurants} closeCard={() => setShowComment(false)} user={user}/>}
         </main>
     )
 }

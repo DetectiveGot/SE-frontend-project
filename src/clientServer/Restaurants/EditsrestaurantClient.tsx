@@ -19,7 +19,7 @@ export default function EditsrestaurantClient({user,restaurants}:{user:any,resta
 
     const [name, setName] = useState(restaurants.name);
     const [address, setAddress] = useState(restaurants.address);
-    const [tel, setTel] = useState(restaurants.telephone);
+    const [telephone, setTel] = useState(restaurants.telephone);
     const [openTime, setOpenTime] = useState(restaurants.openTime);
     const [closeTime, setCloseTime] = useState(restaurants.closeTime);
     const [imgsrc, setImageURL] = useState(restaurants.imgsrc);
@@ -31,7 +31,7 @@ export default function EditsrestaurantClient({user,restaurants}:{user:any,resta
     const payload = {
       name,
       address,
-      tel,
+      telephone,
       openTime,
       closeTime,
       imgsrc,
@@ -96,7 +96,7 @@ export default function EditsrestaurantClient({user,restaurants}:{user:any,resta
 
                 <label>Tel <TextField
                   id="tel"
-                  value={tel}
+                  value={telephone}
                   type='tel'
                   onChange={(e) => setTel(e.target.value)}
                 /> </label>
