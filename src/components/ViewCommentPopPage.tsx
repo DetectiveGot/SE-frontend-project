@@ -5,6 +5,8 @@ import { Button } from "./ui/button";
 import { toast } from "sonner";
 import { Rating } from "@mui/material";
 import { useRouter } from "next/navigation";
+import { PencilLine, Trash2 } from "lucide-react";
+import { AlertRemove } from "./AlertRemove";
 
  const ViewCommentPopPage = ({restaurants,user,closeCard}:{restaurants:RestaurantType,user: UserType,closeCard: () => void} ) => {
     const router = useRouter();
@@ -37,6 +39,28 @@ import { useRouter } from "next/navigation";
         } catch(err) {
             console.log(err);
             toast.error("Failed to create", {
+                position: 'top-center',
+                description: err instanceof Error ? err.message : "Something went wrong.",
+            });
+        }
+    }
+
+    const handleDeleteComment = async (id: string) => {
+        try {
+            const resp = await fetch(`/api/comments/${id}`, {
+                method: 'DELETE',
+            });
+            
+            const data = await resp.json();
+            if(!resp.ok) {
+                throw new Error(data.message || "Failed to delete");
+            }
+            toast.success("Create success!", {position: 'top-center'})
+            router.refresh()
+
+        } catch(err) {
+            console.log(err);
+            toast.error("Failed to delete", {
                 position: 'top-center',
                 description: err instanceof Error ? err.message : "Something went wrong.",
             });
@@ -139,6 +163,18 @@ import { useRouter } from "next/navigation";
                                             },
                                         }}
                                         />
+                                        {(user && user._id===it.user._id) && (
+                                            <>
+                                                <Button type='button' variant={'ghost'}><PencilLine/></Button>
+                                                <AlertRemove
+                                                    title={'Remove Comment'}
+                                                    description={'This action cannot be undone. This will permanently delete this comment data from our servers.'}
+                                                    action={() => handleDeleteComment(it._id.toString())}
+                                                >
+                                                    <Button variant={'destructive'}><Trash2/></Button>
+                                                </AlertRemove>
+                                            </>
+                                        )}
                                     </div>
                                     <h1>{it.text}</h1>
                                 </div>

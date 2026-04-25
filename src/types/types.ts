@@ -2,7 +2,7 @@ import mongoose, { Date } from "mongoose";
 import NextAuth, { DefaultSession } from "next-auth";
 
 export type UserType = {
-    _id: string,
+    _id: mongoose.Types.ObjectId,
     name: string,
     sub: string,
     email: string,
