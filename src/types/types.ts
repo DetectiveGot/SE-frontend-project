@@ -33,7 +33,7 @@ export type CommentType = {
     _id: mongoose.Types.ObjectId
     text: string,
     rating: number,
-    restaurant: ReservationType,
+    restaurant: RestaurantType,
     user: UserType,
     createdAt: Date,
     updatedAt: Date,

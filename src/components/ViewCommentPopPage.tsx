@@ -11,6 +11,7 @@ import { useState } from "react";
 
  const ViewCommentPopPage = ({restaurants,user,closeCard}:{restaurants:RestaurantType,user: UserType,closeCard: () => void} ) => {
     const router = useRouter();
+
     console.log("user is",user)
     const [editing, setEditing] = useState(false);
     const [textVal, setTextVal] = useState("");
@@ -197,7 +198,7 @@ import { useState } from "react";
 
                                         {user._id === it.user._id ? ( 
 
-                                            <h1 className="text-blue-300">{it.user.name}</h1> 
+                                            <h1 className="text-[#00BBFF]">{it.user.name}</h1> 
 
                                             ) : (
 

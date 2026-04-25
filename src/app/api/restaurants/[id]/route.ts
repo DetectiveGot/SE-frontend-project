@@ -104,6 +104,7 @@ export async function DELETE( req: NextRequest, { params }: { params: Promise<{ 
             );
         }
 
+    console.log(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/restaurants/${id}`);
     const data = await res.json();
     return NextResponse.json(data);
   } catch {
