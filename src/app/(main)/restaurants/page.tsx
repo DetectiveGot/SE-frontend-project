@@ -175,6 +175,10 @@ async function FetchData(link:string){
 async function FetchYourComments(link:string){
     const user:UserType = await getUser();
 
+    if(!user) {
+        return;
+    }
+
     const h = await headers();
     const commentsRes = await fetch(link, {
         cache: 'no-store',
