@@ -8,8 +8,8 @@ import { useRouter } from "next/navigation";
 import React from "react";
 import RatingSort from "./RatingSort";
 
- const OwnerViewCommentPopPage = ({restaurants,user,closeCard}:{restaurants:RestaurantType,user: UserType,closeCard: () => void} ) => {
-    
+const OwnerViewCommentPopPage = ({ restaurants, user, closeCard }: { restaurants: RestaurantType, user: UserType, closeCard: () => void }) => {
+
     const router = useRouter();
     const [age, setAge] = React.useState("10");
     const [selected, setSelected] = React.useState<number | null>(null);
@@ -17,9 +17,9 @@ import RatingSort from "./RatingSort";
         setAge(event.target.value);
     };
 
-    console.log("user is",user)
+    console.log("user is", user)
     const handleCreate = async (formData: FormData) => {
-        
+
         try {
             const payload = {
                 text: formData.get("comment"),
@@ -34,16 +34,16 @@ import RatingSort from "./RatingSort";
                 },
                 body: JSON.stringify(payload)
             });
-            
+
             const data = await resp.json();
-            if(!resp.ok) {
+            if (!resp.ok) {
                 throw new Error(data.message || "Failed to create");
             }
-            toast.success("Create success!", {position: 'top-center'})
+            toast.success("Create success!", { position: 'top-center' })
             closeCard();
             router.refresh()
 
-        } catch(err) {
+        } catch (err) {
             console.log(err);
             toast.error("Failed to create", {
                 position: 'top-center',
@@ -52,32 +52,32 @@ import RatingSort from "./RatingSort";
         }
     }
 
-   const filteredComments = (restaurants.comments || []).filter((c) => {
+    const filteredComments = (restaurants.comments || []).filter((c) => {
         if (!selected) return true; // ไม่เลือก = แสดงทั้งหมด
         return c.rating === selected;
     });
 
     const sortedComments = [...filteredComments].sort((a, b) => {
-    const aIsMine = a.user._id.toString() === user._id.toString() ? 1 : 0;
-    const bIsMine = b.user._id.toString() === user._id.toString() ? 1 : 0;
+        const aIsMine = a.user._id.toString() === user._id.toString() ? 1 : 0;
+        const bIsMine = b.user._id.toString() === user._id.toString() ? 1 : 0;
 
-    if (aIsMine !== bIsMine) {
-        return bIsMine - aIsMine;
-    }
+        if (aIsMine !== bIsMine) {
+            return bIsMine - aIsMine;
+        }
 
-    switch (age) {
-        case "10":
-        return new Date(b.createdAt as any).getTime() - new Date(a.createdAt as any).getTime();
+        switch (age) {
+            case "10":
+                return new Date(b.createdAt as any).getTime() - new Date(a.createdAt as any).getTime();
 
-        case "20":
-        return b.rating - a.rating;
+            case "20":
+                return b.rating - a.rating;
 
-        case "30":
-        return a.rating - b.rating;
+            case "30":
+                return a.rating - b.rating;
 
-        default:
-        return 0;
-    }
+            default:
+                return 0;
+        }
     });
 
     return (
@@ -91,8 +91,8 @@ import RatingSort from "./RatingSort";
 
                             <div className="flex flex-row gap-3 [text-shadow:0_4px_20px_rgba(0,0,0,1)] ">
                                 <div className=" w-full flex flex-col items-start gap-3 ">
-                                    <div className=" flex flex-row my-8 items-center gap-5"> 
-                                        <h1 className="text-4xl h-[60px] w-[100%]"> Sort :</h1> 
+                                    <div className=" flex flex-row my-8 items-center gap-5">
+                                        <h1 className="text-4xl h-[60px] w-[100%]"> Sort :</h1>
                                         <FormControl
                                             sx={{
                                                 minWidth: 200,
@@ -101,7 +101,7 @@ import RatingSort from "./RatingSort";
                                                 borderRadius: 1,
                                             }}
                                             size="small"
-                                            >
+                                        >
 
                                             <Select
                                                 labelId="demo-simple-select-helper-label"
@@ -110,11 +110,11 @@ import RatingSort from "./RatingSort";
                                                 label="Sort"
                                                 onChange={handleChange}
                                                 sx={{
-                                                color: "white",
+                                                    color: "white",
 
-                                                ".MuiSvgIcon-root": {
-                                                    color: "#424242",
-                                                },
+                                                    ".MuiSvgIcon-root": {
+                                                        color: "#424242",
+                                                    },
                                                 }}
                                             >
 
@@ -122,24 +122,25 @@ import RatingSort from "./RatingSort";
                                                 <MenuItem value={20}>Rating High-to-Low</MenuItem>
                                                 <MenuItem value={30}>Rating Low-to-High</MenuItem>
                                             </Select>
-                                            </FormControl>
+                                        </FormControl>
 
-                                            <div className="flex gap-4">
-                                                {[1,2,3,4,5].map((num) => (
-                                                    <div
+                                        <div className="flex gap-4">
+                                            {[1, 2, 3, 4, 5].map((num) => (
+                                                <div
                                                     key={num}
-                                                    onClick={() => setSelected(num)}
+                                                    // If the clicked number is already selected, set to null (clear); otherwise, select it.
+                                                    onClick={() => setSelected(selected === num ? null : num)}
                                                     className={`
                                                         p-[6px] px-[10px] border rounded-xl
                                                         transition-all duration-200 cursor-pointer
                                                         hover:scale-110 hover:bg-gray-200
-                                                        ${selected === num ? "bg-gray-200 scale-110" : ""}
+                                                        ${selected === num ? "bg-gray-200 scale-110 border-black" : "border-gray-300"}
                                                     `}
-                                                    >
+                                                >
                                                     <RatingSort value={num} />
-                                                    </div>
-                                                ))}
                                                 </div>
+                                            ))}
+                                        </div>
 
                                     </div>
                                 </div>
@@ -152,41 +153,41 @@ import RatingSort from "./RatingSort";
 
                         <div className="h-full flex flex-col  flex-7 gap-4 overflow-y-scroll">
                             {sortedComments.map((it: CommentType) => (
-                                
+
                                 <div key={it._id.toString()} className="flex flex-col !w-[96%] !overflow-visible border-b border-gray-500 pb-4 gap-2 overflow-scroll">
                                     <div className="flex flex-row gap-3">
 
-                                        {user._id === it.user._id ? ( 
+                                        {user._id === it.user._id ? (
 
-                                            <h1 className="text-[#00BBFF]">{it.user.name}</h1> 
+                                            <h1 className="text-[#00BBFF]">{it.user.name}</h1>
 
-                                            ) : (
+                                        ) : (
 
-                                            <h1 className="text-black">{it.user.name}</h1> 
+                                            <h1 className="text-black">{it.user.name}</h1>
 
-                                            )}
+                                        )}
 
                                         <Rating
-                                        value={it.rating} 
-                                        readOnly
-                                        sx={{
-                                            zIndex: 2,
-                                            fontSize: "1.5rem",
-                                            
-                                            "& .MuiRating-icon svg": {
-                                            strokeWidth: 0.4,
-                                            },
+                                            value={it.rating}
+                                            readOnly
+                                            sx={{
+                                                zIndex: 2,
+                                                fontSize: "1.5rem",
 
-                                            "& .MuiRating-iconFilled svg": {
-                                            fill: "url(#starGradient)",
-                                            stroke: "black",
-                                            },
+                                                "& .MuiRating-icon svg": {
+                                                    strokeWidth: 0.4,
+                                                },
 
-                                            "& .MuiRating-iconEmpty svg": {
-                                            fill: "transparent" ,
-                                            stroke: "#333",
-                                            },
-                                        }}
+                                                "& .MuiRating-iconFilled svg": {
+                                                    fill: "url(#starGradient)",
+                                                    stroke: "black",
+                                                },
+
+                                                "& .MuiRating-iconEmpty svg": {
+                                                    fill: "transparent",
+                                                    stroke: "#333",
+                                                },
+                                            }}
                                         />
                                     </div>
                                     <h1>{it.text}</h1>
@@ -195,7 +196,7 @@ import RatingSort from "./RatingSort";
                         </div>
 
                         <div className="flex flex-col py-5 pl-9 pr-0 flex-3 gap-3">
-                            <img src={restaurants.imgsrc} className=""/>
+                            <img src={restaurants.imgsrc} className="" />
                             <h1 className="text-4xl text-center">{restaurants?.name}</h1>
                             <h1 className="text-xl text-center">Adress : {restaurants?.address} Tel : {restaurants.telephone}</h1>
                         </div>
@@ -207,4 +208,4 @@ import RatingSort from "./RatingSort";
     )
 }
 
-export {OwnerViewCommentPopPage};
+export { OwnerViewCommentPopPage };
