@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { RestaurantAlertRemove } from "@/components/RestaurantAlertRemove";
 import Link from "next/link";
+import { OwnerViewCommentPopPage } from "@/components/OwnerViewCommentPopPage";
 import { ViewCommentPopPage } from "@/components/ViewCommentPopPage";
 
 export default function EachRestaurantClient({restaurants,rating,user,token}:{restaurants:any , rating:number , user:UserType , token:any}) {
@@ -108,20 +109,32 @@ export default function EachRestaurantClient({restaurants,rating,user,token}:{re
                     <h1 className="text-[30px] w-[30%] h-[100px] overflow-y-auto [&::-webkit-scrollbar]:hidden">{restaurants.address} Tel: {restaurants.telephone} </h1>
                 </div>
 
-                <div className="justify-end flex items-end flex-row w-full p-4 gap-x-3">
+                <div>
                   {((role === 'owner' && user && restaurants.user === user._id)|| role === 'admin') ? (
-                    <>
-                      <Link
-                        href={`${pathname}/edit`}
-                        className="w-45 h-15 text-white bg-black text-[30px] rounded-lg flex items-center justify-center transition-all duration-300 ease-out hover:scale-105 hover:shadow-xl"
-                      >
-                        EDIT
-                      </Link>
 
-                      <RestaurantAlertRemove handleDelete={handleDelete} />
-                    </>
+                    <div className="justify-end flex items-end flex-col w-full p-4 mt-[-80px]">
+
+                      <button
+                          className="w-93 h-15 pr-3 text-black bg-white text-[30px] rounded-lg border border-black [text-shadow:0_0_20px_white,0_0_60px_rgba(255,255,255,1),0_0_100px_rgba(255,255,255,0.8)] font-bold transition-all duration-300 ease-out hover:scale-105 hover:shadow-xl"
+                          onClick={() => checkFirst()}
+                        >
+                        REVIEWS
+                      </button>
+
+                      <div className="justify-end flex items-end flex-row w-full pt-4 gap-x-3">
+
+                        <Link
+                          href={`${pathname}/edit`}
+                          className="w-45 h-15 text-white bg-black text-[30px] rounded-lg flex items-center justify-center transition-all duration-300 ease-out hover:scale-105 hover:shadow-xl"
+                        >
+                          EDIT
+                        </Link>
+
+                        <RestaurantAlertRemove handleDelete={handleDelete} />
+                      </div>
+                    </div>
                   ) : (
-                    <>
+                    <div className="justify-end flex items-end flex-row w-full p-4 gap-x-3">
                       <button
                         className="w-45 h-15 text-black bg-white text-[30px] rounded-lg border border-black [text-shadow:0_0_20px_white,0_0_60px_rgba(255,255,255,1),0_0_100px_rgba(255,255,255,0.8)] font-bold transition-all duration-300 ease-out hover:scale-105 hover:shadow-xl"
                         onClick={() => checkFirst()}
@@ -135,7 +148,7 @@ export default function EachRestaurantClient({restaurants,rating,user,token}:{re
                       >
                         RESERVE
                       </button>
-                    </>
+                    </div>
                   )}
                 </div>
                 
@@ -143,7 +156,21 @@ export default function EachRestaurantClient({restaurants,rating,user,token}:{re
           {showCard && (
             <AddReserveCard user={user} restaurant={restaurants} closeCard={() => setShowCard(false)}/>
           )}
-          {showComment && user && <ViewCommentPopPage restaurants={restaurants} closeCard={() => setShowComment(false)} user={user}/>}
-        </main>
+          {showComment && user && (
+            (user.role === "owner" &&  restaurants.user === user._id) ? (
+              <OwnerViewCommentPopPage
+                restaurants={restaurants}
+                closeCard={() => setShowComment(false)}
+                user={user}
+              />
+            ) : (
+              <ViewCommentPopPage
+                restaurants={restaurants}
+                closeCard={() => setShowComment(false)}
+                user={user}
+              />
+            )
+          )}        
+    </main>
     )
 }

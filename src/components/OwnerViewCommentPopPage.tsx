@@ -3,15 +3,21 @@
 import { CommentType, RestaurantType, UserType } from "@/types/types";
 import { Button } from "./ui/button";
 import { toast } from "sonner";
-import { Rating } from "@mui/material";
+import { FormControl, MenuItem, Rating, Select, SelectChangeEvent } from "@mui/material";
 import { useRouter } from "next/navigation";
 import React from "react";
+import RatingSort from "./RatingSort";
 
- const ViewCommentPopPage = ({restaurants,user,closeCard}:{restaurants:RestaurantType,user: UserType,closeCard: () => void} ) => {
+ const OwnerViewCommentPopPage = ({restaurants,user,closeCard}:{restaurants:RestaurantType,user: UserType,closeCard: () => void} ) => {
+    
     const router = useRouter();
+    const [age, setAge] = React.useState("10");
+    const [selected, setSelected] = React.useState<number | null>(null);
+    const handleChange = (event: SelectChangeEvent) => {
+        setAge(event.target.value);
+    };
 
     console.log("user is",user)
-    const [comment, setComment] = React.useState("");
     const handleCreate = async (formData: FormData) => {
         
         try {
@@ -46,14 +52,33 @@ import React from "react";
         }
     }
 
-    const sortedComments = [...restaurants.comments].sort((a, b) => {
-    const aIsMine = a.user._id === user._id ? 1 : 0;
-    const bIsMine = b.user._id === user._id ? 1 : 0;
-
-    return bIsMine - aIsMine;
+   const filteredComments = (restaurants.comments || []).filter((c) => {
+        if (!selected) return true; // ไม่เลือก = แสดงทั้งหมด
+        return c.rating === selected;
     });
 
-    console.log(restaurants.comments);
+    const sortedComments = [...filteredComments].sort((a, b) => {
+    const aIsMine = a.user._id.toString() === user._id.toString() ? 1 : 0;
+    const bIsMine = b.user._id.toString() === user._id.toString() ? 1 : 0;
+
+    if (aIsMine !== bIsMine) {
+        return bIsMine - aIsMine;
+    }
+
+    switch (age) {
+        case "10":
+        return new Date(b.createdAt as any).getTime() - new Date(a.createdAt as any).getTime();
+
+        case "20":
+        return b.rating - a.rating;
+
+        case "30":
+        return a.rating - b.rating;
+
+        default:
+        return 0;
+    }
+    });
 
     return (
         <div className="z-50 fixed inset-0 bg-black/50 flex justify-center items-center h-dvh w-dvw">
@@ -63,39 +88,60 @@ import React from "react";
                     <div className="flex justify-between ">
                         <div className="w-[100%] flex flex-col gap-5 [text-shadow:0_4px_20px_rgba(0,0,0,1)]  relative">
                             <h1 className="text-4xl ">Reviews</h1>
-                            <h1 className="text-xl ">{user?.name}</h1>
 
                             <div className="flex flex-row gap-3 [text-shadow:0_4px_20px_rgba(0,0,0,1)] ">
-                                <div className=" w-full flex flex-col items-end ">
-                                    <input maxLength={500} onChange={(e) => setComment(e.target.value)} id='comment' name='comment' placeholder="Add Comment Here....." className="text-xl h-[40px] w-[100%] border-b border-gray-500" required />
-                                    <h1 className="text-gray-500 w-fit ">{comment.length}/500 Characters</h1>
-                                </div>
-                                <div className="flex flex-col gap-3 [text-shadow:0_4px_20px_rgba(0,0,0,1)] ">
-                                    <Rating
-                                        id='rating' name='rating'
-                                        defaultValue={2.5} 
-                                        sx={{
-                                            zIndex: 2,
-                                            fontSize: "3rem",
-                                            
-                                            "& .MuiRating-icon svg": {
-                                            strokeWidth: 0.4,
-                                            },
+                                <div className=" w-full flex flex-col items-start gap-3 ">
+                                    <div className=" flex flex-row my-8 items-center gap-5"> 
+                                        <h1 className="text-4xl h-[60px] w-[100%]"> Sort :</h1> 
+                                        <FormControl
+                                            sx={{
+                                                minWidth: 200,
+                                                height: 40,
+                                                backgroundColor: "#d6d6d6",
+                                                borderRadius: 1,
+                                            }}
+                                            size="small"
+                                            >
 
-                                            "& .MuiRating-iconFilled svg": {
-                                            fill: "url(#starGradient)",
-                                            stroke: "black",
-                                            },
+                                            <Select
+                                                labelId="demo-simple-select-helper-label"
+                                                id="demo-simple-select-helper"
+                                                value={age}
+                                                label="Sort"
+                                                onChange={handleChange}
+                                                sx={{
+                                                color: "white",
 
-                                            "& .MuiRating-iconEmpty svg": {
-                                            fill: "transparent" ,
-                                            stroke: "#333",
-                                            },
+                                                ".MuiSvgIcon-root": {
+                                                    color: "#424242",
+                                                },
+                                                }}
+                                            >
 
-                                            
-                                        }}
-                                        />
-                                    <Button variant={'outline'} className="h-[50px] text-xl text-white [text-shadow:0_4px_20px_rgba(255,255,255,0.3)] w-full bg-black" type='submit'>Submit</Button>
+                                                <MenuItem value={10}>Most Recent</MenuItem>
+                                                <MenuItem value={20}>Rating High-to-Low</MenuItem>
+                                                <MenuItem value={30}>Rating Low-to-High</MenuItem>
+                                            </Select>
+                                            </FormControl>
+
+                                            <div className="flex gap-4">
+                                                {[1,2,3,4,5].map((num) => (
+                                                    <div
+                                                    key={num}
+                                                    onClick={() => setSelected(num)}
+                                                    className={`
+                                                        p-[6px] px-[10px] border rounded-xl
+                                                        transition-all duration-200 cursor-pointer
+                                                        hover:scale-110 hover:bg-gray-200
+                                                        ${selected === num ? "bg-gray-200 scale-110" : ""}
+                                                    `}
+                                                    >
+                                                    <RatingSort value={num} />
+                                                    </div>
+                                                ))}
+                                                </div>
+
+                                    </div>
                                 </div>
                             </div>
                             <Button variant={'destructive'} onClick={closeCard} className="absolute top-0 right-0">X</Button>
@@ -161,4 +207,4 @@ import React from "react";
     )
 }
 
-export {ViewCommentPopPage};
+export {OwnerViewCommentPopPage};

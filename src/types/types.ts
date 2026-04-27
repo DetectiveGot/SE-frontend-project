@@ -23,6 +23,7 @@ export type RestaurantType = {
     imgsrc: string,
     name: string,
     address: string,
+    user: string,
     comments: CommentType[],
     telephone:string,
     openTime: string,
@@ -35,8 +36,8 @@ export type CommentType = {
     rating: number,
     restaurant: RestaurantType,
     user: UserType,
-    createdAt: Date,
-    updatedAt: Date,
+    createdAt: string,
+    updatedAt: string,
 }
 
 declare module "next-auth" {

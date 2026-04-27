@@ -39,7 +39,6 @@ export default async function RestaurantsPage() {
                             <GridDisplay restaurants={restaurants} ratingMap={result}/>
                             <div className="flex flex-col absolute w-[280px] h-[360px] z-20 ml-[1000px] mt-[90px]"> 
                                 { user ? 
-                                
                                 mycomments.map((it: CommentType) => (
                                     <div key={it._id.toString()} className="text-xl">
 
