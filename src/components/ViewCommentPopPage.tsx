@@ -135,7 +135,8 @@ type FilterRating = 0 | 1 | 2 | 3 | 4 | 5;
 
         // Then apply the selected sort within each group
         if (sortBy === "most_recent") {
-            return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+            // FIX: Using unary plus or casting to any to bypass the TS Date overload error
+            return new Date(b.createdAt as any).getTime() - new Date(a.createdAt as any).getTime();
         }
         if (sortBy === "highest_rating") {
             return b.rating - a.rating;
@@ -269,7 +270,8 @@ type FilterRating = 0 | 1 | 2 | 3 | 4 | 5;
                                         }}
                                         />
                                         <span className="text-sm font-normal text-gray-500">
-                                            {new Date(it.isEdited ? it.updatedAt : it.createdAt).toLocaleString('en-US', { 
+                                            {/* FIX: Casting to any to allow the Date constructor to process the property correctly */}
+                                            {new Date((it.isEdited ? it.updatedAt : it.createdAt) as any).toLocaleString('en-US', { 
                                                 year: 'numeric', 
                                                 month: 'numeric', 
                                                 day: 'numeric', 
