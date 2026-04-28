@@ -11,10 +11,11 @@ import RatingSort from "./RatingSort";
 const OwnerViewCommentPopPage = ({ restaurants, user, closeCard }: { restaurants: RestaurantType, user: UserType, closeCard: () => void }) => {
 
     const router = useRouter();
-    const [age, setAge] = React.useState("10");
+    const [sortType, setsortType] = React.useState("10");
     const [selected, setSelected] = React.useState<number | null>(null);
     const handleChange = (event: SelectChangeEvent) => {
-        setAge(event.target.value);
+        console.log("sortType",sortType)
+        setsortType(event.target.value);
     };
 
     console.log("user is", user)
@@ -53,7 +54,7 @@ const OwnerViewCommentPopPage = ({ restaurants, user, closeCard }: { restaurants
     }
 
     const filteredComments = (restaurants.comments || []).filter((c) => {
-        if (!selected) return true; // ไม่เลือก = แสดงทั้งหมด
+        if (!selected) return true;
         return c.rating === selected;
     });
 
@@ -65,7 +66,7 @@ const OwnerViewCommentPopPage = ({ restaurants, user, closeCard }: { restaurants
             return bIsMine - aIsMine;
         }
 
-        switch (age) {
+        switch (sortType) {
             case "10":
                 return new Date(b.createdAt as any).getTime() - new Date(a.createdAt as any).getTime();
 
@@ -106,7 +107,7 @@ const OwnerViewCommentPopPage = ({ restaurants, user, closeCard }: { restaurants
                                             <Select
                                                 labelId="demo-simple-select-helper-label"
                                                 id="demo-simple-select-helper"
-                                                value={age}
+                                                value={sortType}
                                                 label="Sort"
                                                 onChange={handleChange}
                                                 sx={{
@@ -118,9 +119,9 @@ const OwnerViewCommentPopPage = ({ restaurants, user, closeCard }: { restaurants
                                                 }}
                                             >
 
-                                                <MenuItem value={10}>Most Recent</MenuItem>
-                                                <MenuItem value={20}>Rating High-to-Low</MenuItem>
-                                                <MenuItem value={30}>Rating Low-to-High</MenuItem>
+                                                <MenuItem value={"10"}>Most Recent</MenuItem>
+                                                <MenuItem value={"20"}>Rating High-to-Low</MenuItem>
+                                                <MenuItem value={"30"}>Rating Low-to-High</MenuItem>
                                             </Select>
                                         </FormControl>
 
